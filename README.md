@@ -61,7 +61,7 @@ https://github.com/sergioperezz/Disaster-response-Pipeline-UND.git
 
 ## Authors
 
-Sergio Pérez
+[Sergio Pérez](https://github.com/sergioperezz)
 
 ## License
 
