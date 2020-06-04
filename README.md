@@ -2,7 +2,13 @@
 
 ## Project motivation
 
-The project goes from the ETL of the data, creating a model to classify the messages and a web to plot the result. The project gets a message and classifies it.
+The project goes from the ETL of the data, creating a model to classify the messages and a web to plot the results. The project gets a message and classifies it.
+- 1. load the message.csv and categories.csv with the data.
+- 2. Make the ETL process of them, merging and cleaning them. 
+- 3. Load the resultant df into a sqlite db.
+- 4. Create a model from a NLP pipeline process.
+- 5. Test the results.
+- 6. Plot the result with Flask and Plotly.
 
 ## Content
 ```
@@ -63,7 +69,11 @@ https://github.com/sergioperezz/Disaster-response-Pipeline-UND.git
 
 [Sergio Pérez](https://github.com/sergioperezz)
 
-## License
+## License and Acknowledgements
+
+Project developed under MIT licensing.
+Thank [Figure Eight](https://appen.com/datasets/combined-disaster-response-data/) for the data.
+
 
 ## Capture
 
