@@ -77,6 +77,6 @@ Thank [Figure Eight](https://appen.com/datasets/combined-disaster-response-data/
 
 ## Capture
 
-![alt text](https://github.com/sergioperezz/Disaster-response-Pipeline-UND/blob/master/captures/front1.PNG)
+![alt text](https://github.com/sergioperezz/Disaster-response-Pipeline-UND/blob/master/captures/front4.PNG)
 ![alt text](https://github.com/sergioperezz/Disaster-response-Pipeline-UND/blob/master/captures/front2.PNG)
 ![alt text](https://github.com/sergioperezz/Disaster-response-Pipeline-UND/blob/master/captures/front3.PNG)
