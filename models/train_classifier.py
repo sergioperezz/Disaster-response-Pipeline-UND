@@ -19,6 +19,11 @@ from sklearn.base import BaseEstimator, TransformerMixin
 import pickle
 
 def load_data(database_filepath):
+    """
+    function that loads the df from the ETL
+    args: file to the  df after the ETL
+    return: X data, y data, and category names of the columns
+    """
     engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql_table('df',engine)
     X = df.message
@@ -27,6 +32,11 @@ def load_data(database_filepath):
     return X,y, category_names
 
 def tokenize(text):
+    """
+    function that tokenize the text
+    Args: text
+    return: the text after the process
+    """
     url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
   
     detected_urls = re.findall(url_regex, text)
@@ -44,25 +54,45 @@ def tokenize(text):
     return clean_tokens
 
 class StartingVerbExtractor(BaseEstimator, TransformerMixin):
-
+    """
+    class that identify if the first word is a verb.
+    """
     def starting_verb(self, text):
+        """
+        method that identify if the first word of the sentence is a verb
+        Args: text
+        return: True if first word is verb, else False
+        """
         sentence_list = nltk.sent_tokenize(text)
         for sentence in sentence_list:
             pos_tags = nltk.pos_tag(tokenize(sentence))
+            if len(pos_tags)==0:
+                return False
             first_word, first_tag = pos_tags[0]
             if first_tag in ['VB', 'VBP'] or first_word == 'RT':
                 return True
         return False
 
     def fit(self, X, y=None):
+        """
+        method needed to create the class
+        """       
         return self
 
     def transform(self, X):
+        """
+        method that applies the transformation
+        """
         X_tagged = pd.Series(X).apply(self.starting_verb)
         return pd.DataFrame(X_tagged)
 
-
-def build_model():
+    
+def build_model(): 
+    """
+    pipeline with all the transformation
+    Args: None
+    Return: the model 
+    """
     pipeline = Pipeline([
         ('features', FeatureUnion([
 
@@ -74,22 +104,34 @@ def build_model():
             ('starting_verb', StartingVerbExtractor())
         ])),
 
-        ('clf', MultiOutputClassifier(AdaBoostClassifier()))
+        ('clf', MultiOutputClassifier(RandomForestClassifier()))
     ])
+    
+    parameters = {'clf__estimator__n_estimators': [10, 25],
+                'clf__estimator__min_samples_split': [2, 4]}
 
-    return pipeline
+    cv = GridSearchCV(pipeline, param_grid=parameters)
 
+    return cv
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    
+    """
+    method that print the evaluation of the model printing accuracy, f1-score, recall and support
+    Args: model, X_test, Y_test, category_names
+    return: None 
+    """
     y_pred=model.predict(X_test)
 
-    print(classification_report(Y_test.iloc[:,1:].values, np.array([x[1:] for x in y_pred]), target_names=category_names))  
-
-
+    #print(classification_report(Y_test.iloc[:,1:].values, np.array([x[1:] for x in y_pred]), target_names=category_names))  
+    print(classification_report(Y_test.iloc[:,2:].values, np.array([x[2:] for x in y_pred]), target_names=category_names[:-2]))
 
 def save_model(model, model_filepath):
+    """
+    Save the model into a pkl file
+    Args: model, path where to save the file
+    return: None
+    """
     filename = model_filepath
     pickle.dump(model, open(filename, 'wb'))
 
